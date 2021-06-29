@@ -1,0 +1,175 @@
+notes:build asp.net core app with angular
+
+Installtion of Dot net core 5.0 is mandatory to go ahead
+
+1) create folder (project name)
+2) go to path through cmd prompt
+3)  run dotnet new sln command
+
+run command dotnet new webapi -o API    
+
+folder will created AS API
+
+Resigister your API project into sln project
+
+so run below command:
+
+dotnet sln add API
+
+# Install c# extension in VS Code
+
+
+Open Project in VS Code
+Now install extenions 
+1) C# 
+2) C# Extensions
+3) Material Icon theme  => set file icon theme
+
+4) Enable auto save from file
+5) Settings Icon 
+    Search Font 
+        set font terminal,debug
+6) Termianl shortcut      ctrl + bkeky
+7) Hide bin and debug folder from sln explorer in vs Code
+    go to Settings and search exclude
+    Files exclude
+8) setting folder shown by defult in compact mode untick this 
+    compact folders    
+
+Connect to sql server
+
+DESKTOP-3PMI9BA
+"Default": "server=DESKTOP-3PMI9BA\\SQLEXPRESS;Initial Catalog=SellingPropDb;Integrated Security=SSPI;"
+
+#Getting to know API Files
+run below command on Termianl
+cd API 
+
+In appsettings.Development.json 
+    set "Microsoft": "Warning", as Information
+
+ run command:
+G:\DatingApp\API>dotnet run 
+
+certificate  cmd run on terminal
+
+dotnet dev-certs https --trust
+
+#Adding EF to our project 
+
+serach nuget gallery into extenions 
+and install
+Press ctrl+shift+p search nuget gallery (open nuget gallery)
+install EF core as your dot net version i.e 5.0.70
+also install EFCore.SqlServer as  i.e 5.0.70
+
+
+#Adding DbContext Class
+
+1) create folder Data 
+under Data folder create class DataContext.cs
+
+using Microsoft.EntityFrameworkCore;
+
+namespace API.Data
+{
+    public class DataContext:DbContext
+    {
+        
+    }
+}
+2) add below Code
+using Microsoft.EntityFrameworkCore;
+
+namespace API.Data
+{
+    public class DataContext:DbContext
+    {
+        public DataContext(DbContextOptions options):base(options)
+        {
+            
+        }
+        
+        public DbSet<AppUser> Users { get; set; }
+    }
+}
+3) register DataContext in startup.cs use ctrl+p and search startup.cs for shortcut
+
+ // This method gets called by the runtime. 
+ //Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddDbContext<DataContext>(options=>{
+                options.UseSqlServer("Connection String");
+            });
+        }
+
+#Creating Connection String
+1)
+public class Startup
+    {
+        private readonly IConfiguration _config
+        public Startup(IConfiguration config)
+        {
+            _config = config;
+        }
+
+        // This method gets called by the runtime. Use this method to add services to the container.
+        public void ConfigureServices(IServiceCollection services)
+        {
+            services.AddDbContext<DataContext>(options=>{
+                options.UseSqlServer(_config.GetConnectionString("DefaultConnection"));
+            });
+            services.AddControllers();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
+            });
+        }
+
+    }
+ 2) Install pkg console mgr 
+ go to nuget.org
+ and search dotnet-ef   
+ and run below command
+ dotnet tool install --global dotnet-ef --version 5.0.7
+
+3) Create Migrations
+run below cmd on terminal
+dotnet ef migrations add InitialCreate -o Data/Migrations
+
+go to nuget gallery Press ctrl+shift+p search nuget gallery (open nuget gallery)
+
+install
+Microsoft.EntityFrameworkCore.Design
+and now run command again  (dotnet ef migrations add InitialCreate -o Data/Migrations)
+
+dotnet build => for build project
+
+
+#Creating DB using EF Code First Migrations
+"DefaultConnection":"Data Source=DESKTOP-3PMI9BA\\SQLEXPRESS;Initial Catalog=DatingAppDB;Integrated Security=SSPI;"
+1) Update Db Migrations
+clear
+dotnet ef database update
+
+
+#Adding a new API AddControllers
+
+Users Controller added 
+
+#Git SCM
+
+create account on git hub
+install git
+run git status command on vs code terminal
+https://git-scm.com/download/win
+run below command now
+git init
+
+create dot net git ignore file
+dotnet new gitignore
+    observe changes soruce control our changes get reduced.
+add appsettings.json file in .gitignore    
+
+Go to changes and add click on plus icon of changes 
