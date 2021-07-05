@@ -1,3 +1,7 @@
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+npm install --save-dev @angular/cli@latest
+
+
 notes:build asp.net core app with angular
 
 Installtion of Dot net core 5.0 is mandatory to go ahead
